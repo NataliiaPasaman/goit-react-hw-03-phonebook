@@ -5,6 +5,8 @@ import { ContactForm } from "./ContactForm/ContactForm";
 import { Filter } from "./Filter/Filter";
 import { ContactsList } from "./ContactsList/ContactsList";
 
+const CONTACTS = 'contacts';
+
 export class App extends Component {
   constructor() {
     super();
@@ -12,6 +14,23 @@ export class App extends Component {
       contacts: [],
       filter: '',
     };
+  }
+
+  componentDidMount() {
+    const contactString = localStorage.getItem(CONTACTS);
+    const contactParsed = JSON.parse(contactString);
+
+    if(contactParsed) {
+      return this.setState({ contacts: contactParsed });
+    }
+  }
+
+  componentDidUpdate(prevState) {
+    const { contacts } = this.state;
+
+    if (prevState.contacts !== contacts) {
+      localStorage.setItem(CONTACTS, JSON.stringify(contacts));
+    }
   }
 
   hadleSubmit = (name, number) => {
